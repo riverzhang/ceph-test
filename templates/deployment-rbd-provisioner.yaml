@@ -30,15 +30,13 @@ spec:
   template:
     metadata:
       labels:
-{{ tuple $envAll "rbd" "provisioner" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
+{{ tuple $envAll "ceph" "rbd-provisioner" | include "helm-toolkit.snippets.kubernetes_metadata_labels" | indent 8 }}
     spec:
       affinity:
 {{ tuple $envAll "rbd" "provisioner" | include "helm-toolkit.snippets.kubernetes_pod_anti_affinity" | indent 8 }}
-      initContainers:
-{{ tuple $envAll $dependencies "[]" | include "helm-toolkit.snippets.kubernetes_entrypoint_init_container" | indent 8 }}
       containers:
         - name: ceph-rbd-provisioner
-          image: {{ .Values.images.tags.ceph_rbd_provisioner }}
+          image: {{ .Values.images.rbd_provisioner }}
           imagePullPolicy: {{ .Values.images.pull_policy }}
 {{ tuple $envAll $envAll.Values.pod.resources.rbd_provisioner | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
           env:

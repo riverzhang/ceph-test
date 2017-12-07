@@ -51,8 +51,6 @@ data:
 {{ tuple "bin/_osd_disk_prepare.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   osd_disks.sh: |+
 {{ tuple "bin/_osd_disks.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
-  remove-mon.sh: |+
-{{ tuple "bin/_remove-mon.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   start_mon.sh: |+
 {{ tuple "bin/_start_mon.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   start_osd.sh: |+
@@ -61,6 +59,8 @@ data:
 {{ tuple "bin/_start_mds.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   start_rgw.sh: |+
 {{ tuple "bin/_start_rgw.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+  start_mgr.sh: |+
+{{ tuple "bin/_start_mgr.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   init_rgw_ks.sh: |+
 {{ tuple "bin/_init_rgw_ks.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
   watch_mon_health.sh: |+
@@ -71,5 +71,13 @@ data:
 {{ tuple "bin/_check_zombie_mons.py.tpl" . | include  "helm-toolkit.utils.template" | indent 4 }}
   rbd-provisioner.sh: |
 {{ tuple "bin/_rbd-provisioner.sh.tpl" . | include  "helm-toolkit.utils.template" | indent 4 }}
+  log_handler.sh: |
+{{ tuple "bin/_log_handler.sh.tpl" . | include  "helm-toolkit.utils.template" | indent 4 }}
+  ceph-storage-admin-key-cleaner.sh: |+
+{{ tuple "bin/_ceph-storage-admin-key-cleaner.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+  check_mgr.sh: |+
+{{ tuple "bin/_check_mgr.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
+  exec_ceph_commands.sh: |+
+{{ tuple "bin/_exec_ceph_commands.sh.tpl" . | include "helm-toolkit.utils.template" | indent 4 }}
 {{- end }}
 {{- end }}

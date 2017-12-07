@@ -15,6 +15,11 @@ if [[ -z "$MON_IP" ]]; then
   exit 1
 fi
 
+if [[ -z "$MON_IP" || -z "$CEPH_PUBLIC_NETWORK" ]]; then
+  log "ERROR- it looks like we have not been able to discover the network settings"
+  exit 1
+fi
+
 function get_mon_config {
   # Get fsid from ceph.conf
   local fsid=$(ceph-conf --lookup fsid -c /etc/ceph/${CLUSTER}.conf)
@@ -37,11 +42,22 @@ function get_mon_config {
       exit 1
   fi
 
+  # if monmap exists and the mon is already there, don't overwrite monmap
+  if [ -f "${MONMAP}" ]; then
+      monmaptool --print "${MONMAP}" |grep -q "${MON_IP// }"":6789"
+      if [ $? -eq 0 ]; then
+          log "${MON_IP} already exists in monmap ${MONMAP}"
+          return
+      fi
+  fi
+
   # Create a monmap with the Pod Names and IP
   monmaptool --create ${MONMAP_ADD} --fsid ${fsid} $MONMAP --clobber
 }
 
 get_mon_config $IP_VERSION
+
+chown ceph. /var/log/ceph
 
 # If we don't have a monitor keyring, this is a new monitor
 if [ ! -e "$MON_DATA_DIR/keyring" ]; then

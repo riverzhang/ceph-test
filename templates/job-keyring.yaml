@@ -17,8 +17,7 @@ limitations under the License.
 {{- if .Values.manifests.job_keyring }}
 {{- $envAll := . }}
 {{- if .Values.deployment.storage_secrets }}
-{{- range $key1, $cephBootstrapKey := tuple "mds" "osd" "rgw" "mon" }}
-{{- if not (and (not $envAll.Values.manifests.deployment_rgw) (eq $cephBootstrapKey "rgw")) }}
+{{- range $key1, $cephBootstrapKey := tuple "mds" "osd" "rgw" "mon" "mgr"}}
 {{- $jobName := print $cephBootstrapKey "-keyring-generator" }}
 ---
 apiVersion: batch/v1
@@ -36,7 +35,7 @@ spec:
         {{ $envAll.Values.labels.jobs.node_selector_key }}: {{ $envAll.Values.labels.jobs.node_selector_value }}
       containers:
         - name:  ceph-{{ $jobName }}
-          image: {{ $envAll.Values.images.tags.ceph_config_helper }}
+          image: {{ $envAll.Values.images.ceph_config_helper }}
           imagePullPolicy: {{ $envAll.Values.images.pull_policy }}
 {{ tuple $envAll $envAll.Values.pod.resources.jobs.secret_provisioning | include "helm-toolkit.snippets.kubernetes_resources" | indent 10 }}
           env:
@@ -84,7 +83,6 @@ spec:
           configMap:
             name: ceph-templates
             defaultMode: 0444
-{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
